@@ -886,6 +886,16 @@ def render_live():
         game_state = str(game_data.get("gameState", "")).upper()
         is_live = game_state in {"LIVE", "CRIT"}
 
+        away_color = TEAM_COLORS.get(away_abbrev, "#555555")
+        home_color = TEAM_COLORS.get(home_abbrev, "#555555")
+        st.markdown(
+            f"""<style>
+            button[kind="secondary"]:has(p:contains("{away_abbrev}")) p {{ color: {away_color} !important; font-weight: 700 !important; }}
+            button[kind="secondary"]:has(p:contains("{home_abbrev}")) p {{ color: {home_color} !important; font-weight: 700 !important; }}
+            </style>""",
+            unsafe_allow_html=True,
+        )
+
         alerts = []
         deltas = []
         if is_live and not st.session_state.is_first_tick:
