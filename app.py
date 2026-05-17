@@ -681,17 +681,17 @@ def team_side_header(abbrev: str, label: str):
 _STAT_COL_MAP = {"G": "goals", "A": "assists", "PTS": "points", "SOG": "sog", "BS": "blocked", "SV": "saves", "FO Taken": "fo_taken", "FO Won": "fo_won"}
 
 
-def sort_bar(table_id: str, columns: list[str], name_col: str = "Player"):
+def sort_bar(table_id: str, columns: list[str], name_col: str = "Player", label: str | None = None):
     """Renders a compact sort dropdown. Returns the current sort column."""
     all_cols = [name_col] + columns
     current = st.session_state.get(f"sort_{table_id}", name_col)
     idx = all_cols.index(current) if current in all_cols else 0
     chosen = st.selectbox(
-        "Sort by",
+        label or "Sort by",
         options=all_cols,
         index=idx,
         key=f"sort_{table_id}_select",
-        label_visibility="collapsed",
+        label_visibility="visible" if label else "collapsed",
     )
     st.session_state[f"sort_{table_id}"] = chosen
     return chosen
@@ -970,19 +970,17 @@ def render_live():
                 })
 
             if team_filter == "All":
+                _, ctr, _ = st.columns([1, 2, 1])
+                with ctr:
+                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"], label="Skaters")
                 away_skater_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_skater_rows if r["Team"] == away_abbrev],
-                    "Player",
+                    skater_sort,
                 )
                 home_skater_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_skater_rows if r["Team"] == home_abbrev],
-                    "Player",
+                    skater_sort,
                 )
-                _, sort_col_box = st.columns([5, 1])
-                with sort_col_box:
-                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
-                away_skater_rows = apply_sort(away_skater_rows, skater_sort)
-                home_skater_rows = apply_sort(home_skater_rows, skater_sort)
                 col_l, col_r = st.columns(2)
                 with col_l:
                     if away_skater_rows:
