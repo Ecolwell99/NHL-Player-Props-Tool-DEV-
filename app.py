@@ -1037,19 +1037,14 @@ def render_live():
                     "SV": saves,
                 })
 
-            section_header("Goalies — Saves")
-
             if team_filter == "All":
-                _, sort_col_g = st.columns([5, 1])
-                with sort_col_g:
-                    goalie_sort = sort_bar("goalies", ["SV"], name_col="Goalie")
                 away_goalie_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_goalie_rows if r["Team"] == away_abbrev],
-                    goalie_sort, name_col="Goalie",
+                    "Goalie", name_col="Goalie",
                 )
                 home_goalie_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_goalie_rows if r["Team"] == home_abbrev],
-                    goalie_sort, name_col="Goalie",
+                    "Goalie", name_col="Goalie",
                 )
                 col_l, col_r = st.columns(2)
                 with col_l:
@@ -1065,12 +1060,9 @@ def render_live():
                     else:
                         st.info("No goalie stats yet.")
             else:
-                _, sort_col_g = st.columns([5, 1])
-                with sort_col_g:
-                    goalie_sort = sort_bar("goalies", ["SV"], name_col="Goalie")
                 goalie_rows = apply_sort(
                     [r for r in all_goalie_rows if r["Team"] == team_filter],
-                    goalie_sort, name_col="Goalie",
+                    "Goalie", name_col="Goalie",
                 )
                 if goalie_rows:
                     team_summary_card(team_filter, {"SV": sum(r["SV"] for r in goalie_rows)})
