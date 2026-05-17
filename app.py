@@ -943,18 +943,6 @@ def render_live():
         # -----------------------------------------------------------------------
         with tab_box:
             warning_box(st.session_state.warning_message, st.session_state.warning_type)
-            col_all, col_away, col_home = st.columns(3)
-            with col_all:
-                if st.button("All Players", use_container_width=True, key="box_all"):
-                    st.session_state.team_filter = "All"
-            with col_away:
-                if st.button(f"{away_abbrev} (Away)", use_container_width=True, key="box_away"):
-                    st.session_state.team_filter = away_abbrev
-            with col_home:
-                if st.button(f"{home_abbrev} (Home)", use_container_width=True, key="box_home"):
-                    st.session_state.team_filter = home_abbrev
-
-            st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
 
             # Build all skater rows (no team filter applied yet)
             all_skater_rows = []
@@ -969,12 +957,22 @@ def render_live():
                     "BS": s["blocked"],
                 })
 
+            col_all, col_away, col_home, _, sort_col_box = st.columns([2, 1, 1, 1, 2])
+            with col_all:
+                if st.button("All Players", use_container_width=True, key="box_all"):
+                    st.session_state.team_filter = "All"
+            with col_away:
+                if st.button(away_abbrev, use_container_width=True, key="box_away"):
+                    st.session_state.team_filter = away_abbrev
+            with col_home:
+                if st.button(home_abbrev, use_container_width=True, key="box_home"):
+                    st.session_state.team_filter = home_abbrev
+            with sort_col_box:
+                skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
+
+            st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
+
             if team_filter == "All":
-                _, lbl_col, dd_col, _ = st.columns([2, 1, 1, 2])
-                with lbl_col:
-                    st.markdown("<div style='text-align:right; padding-top:8px; font-size:14px; font-weight:600; opacity:0.75;'>Skaters</div>", unsafe_allow_html=True)
-                with dd_col:
-                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
                 away_skater_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_skater_rows if r["Team"] == away_abbrev],
                     skater_sort,
@@ -1009,9 +1007,6 @@ def render_live():
                     else:
                         st.info("No skater stats yet.")
             else:
-                _, sort_col_box = st.columns([5, 1])
-                with sort_col_box:
-                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
                 skater_rows = apply_sort(
                     [r for r in all_skater_rows if r["Team"] == team_filter],
                     skater_sort,
