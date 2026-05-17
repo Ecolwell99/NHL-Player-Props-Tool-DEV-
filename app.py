@@ -988,12 +988,26 @@ def render_live():
                 with col_l:
                     team_side_header(away_abbrev, "Away")
                     if away_skater_rows:
+                        team_summary_card(away_abbrev, {
+                            "G": sum(r["G"] for r in away_skater_rows),
+                            "A": sum(r["A"] for r in away_skater_rows),
+                            "PTS": sum(r["PTS"] for r in away_skater_rows),
+                            "SOG": sum(r["SOG"] for r in away_skater_rows),
+                            "BS": sum(r["BS"] for r in away_skater_rows),
+                        })
                         st.markdown(html_table(away_skater_rows, color_mode, flash=st.session_state.stat_flash), unsafe_allow_html=True)
                     else:
                         st.info("No skater stats yet.")
                 with col_r:
                     team_side_header(home_abbrev, "Home")
                     if home_skater_rows:
+                        team_summary_card(home_abbrev, {
+                            "G": sum(r["G"] for r in home_skater_rows),
+                            "A": sum(r["A"] for r in home_skater_rows),
+                            "PTS": sum(r["PTS"] for r in home_skater_rows),
+                            "SOG": sum(r["SOG"] for r in home_skater_rows),
+                            "BS": sum(r["BS"] for r in home_skater_rows),
+                        })
                         st.markdown(html_table(home_skater_rows, color_mode, flash=st.session_state.stat_flash), unsafe_allow_html=True)
                     else:
                         st.info("No skater stats yet.")
@@ -1046,11 +1060,13 @@ def render_live():
                 col_l, col_r = st.columns(2)
                 with col_l:
                     if away_goalie_rows:
+                        team_summary_card(away_abbrev, {"SV": sum(r["SV"] for r in away_goalie_rows)})
                         st.markdown(html_table(away_goalie_rows, color_mode, flash=st.session_state.stat_flash), unsafe_allow_html=True)
                     else:
                         st.info("No goalie stats yet.")
                 with col_r:
                     if home_goalie_rows:
+                        team_summary_card(home_abbrev, {"SV": sum(r["SV"] for r in home_goalie_rows)})
                         st.markdown(html_table(home_goalie_rows, color_mode, flash=st.session_state.stat_flash), unsafe_allow_html=True)
                     else:
                         st.info("No goalie stats yet.")
@@ -1114,12 +1130,26 @@ def render_live():
                 with col_l:
                     team_side_header(away_abbrev, "Away")
                     if away_fo_rows:
+                        away_taken = sum(r["FO Taken"] for r in away_fo_rows)
+                        away_won = sum(r["FO Won"] for r in away_fo_rows)
+                        team_summary_card(away_abbrev, {
+                            "FO Taken": away_taken,
+                            "FO Won": away_won,
+                            "Win %": f"{round(100 * away_won / away_taken)}%" if away_taken > 0 else "—",
+                        })
                         st.markdown(html_table(away_fo_rows, color_mode, flash=st.session_state.stat_flash), unsafe_allow_html=True)
                     else:
                         st.info("No faceoff data yet.")
                 with col_r:
                     team_side_header(home_abbrev, "Home")
                     if home_fo_rows:
+                        home_taken = sum(r["FO Taken"] for r in home_fo_rows)
+                        home_won = sum(r["FO Won"] for r in home_fo_rows)
+                        team_summary_card(home_abbrev, {
+                            "FO Taken": home_taken,
+                            "FO Won": home_won,
+                            "Win %": f"{round(100 * home_won / home_taken)}%" if home_taken > 0 else "—",
+                        })
                         st.markdown(html_table(home_fo_rows, color_mode, flash=st.session_state.stat_flash), unsafe_allow_html=True)
                     else:
                         st.info("No faceoff data yet.")
