@@ -773,12 +773,12 @@ def team_summary_card(team: str, stats: dict):
     text = pill_text_color(color)
     pill = f'<span style="background-color:{color}; color:{text}; padding:3px 12px; border-radius:12px; font-weight:700; font-size:13px; margin-right:14px;">{team}</span>'
     stat_parts = "".join(
-        f'<span style="margin-right:16px; font-size:13px; font-weight:600;">'
-        f'<span style="opacity:0.55; font-weight:500;">{label}:</span> {val}</span>'
+        f'<span style="margin-right:20px; font-size:18px; font-weight:700;">'
+        f'<span style="opacity:0.55; font-size:13px; font-weight:500;">{label}:</span> {val}</span>'
         for label, val in stats.items()
     )
     st.markdown(
-        f'<div style="padding:10px 16px; margin-bottom:10px; border-radius:8px; '
+        f'<div style="padding:12px 16px; margin-bottom:10px; border-radius:8px; '
         f'background-color:var(--secondary-background-color); display:flex; align-items:center; flex-wrap:wrap;">'
         f'{pill}{stat_parts}</div>',
         unsafe_allow_html=True,
@@ -970,8 +970,6 @@ def render_live():
                 })
 
             hdr_col, sort_col_box = st.columns([5, 1])
-            with hdr_col:
-                section_header("Skaters — G / A / PTS / SOG / BS")
             with sort_col_box:
                 skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
 
