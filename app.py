@@ -969,19 +969,20 @@ def render_live():
                     "BS": s["blocked"],
                 })
 
-            hdr_col, sort_col_box = st.columns([5, 1])
-            with sort_col_box:
-                skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
-
             if team_filter == "All":
                 away_skater_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_skater_rows if r["Team"] == away_abbrev],
-                    skater_sort,
+                    "Player",
                 )
                 home_skater_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_skater_rows if r["Team"] == home_abbrev],
-                    skater_sort,
+                    "Player",
                 )
+                _, sort_col_box = st.columns([5, 1])
+                with sort_col_box:
+                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
+                away_skater_rows = apply_sort(away_skater_rows, skater_sort)
+                home_skater_rows = apply_sort(home_skater_rows, skater_sort)
                 col_l, col_r = st.columns(2)
                 with col_l:
                     if away_skater_rows:
@@ -1008,6 +1009,9 @@ def render_live():
                     else:
                         st.info("No skater stats yet.")
             else:
+                _, sort_col_box = st.columns([5, 1])
+                with sort_col_box:
+                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
                 skater_rows = apply_sort(
                     [r for r in all_skater_rows if r["Team"] == team_filter],
                     skater_sort,
@@ -1038,13 +1042,12 @@ def render_live():
                     "SV": saves,
                 })
 
-            hdr_col_g, sort_col_g = st.columns([5, 1])
-            with hdr_col_g:
-                section_header("Goalies — Saves")
-            with sort_col_g:
-                goalie_sort = sort_bar("goalies", ["SV"], name_col="Goalie")
+            section_header("Goalies — Saves")
 
             if team_filter == "All":
+                _, sort_col_g = st.columns([5, 1])
+                with sort_col_g:
+                    goalie_sort = sort_bar("goalies", ["SV"], name_col="Goalie")
                 away_goalie_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_goalie_rows if r["Team"] == away_abbrev],
                     goalie_sort, name_col="Goalie",
@@ -1067,6 +1070,9 @@ def render_live():
                     else:
                         st.info("No goalie stats yet.")
             else:
+                _, sort_col_g = st.columns([5, 1])
+                with sort_col_g:
+                    goalie_sort = sort_bar("goalies", ["SV"], name_col="Goalie")
                 goalie_rows = apply_sort(
                     [r for r in all_goalie_rows if r["Team"] == team_filter],
                     goalie_sort, name_col="Goalie",
@@ -1107,13 +1113,12 @@ def render_live():
                     "Win %": win_pct,
                 })
 
-            hdr_col_fo, sort_col_fo = st.columns([5, 1])
-            with hdr_col_fo:
-                section_header("Faceoffs — Taken / Won / Win%")
-            with sort_col_fo:
-                fo_sort = sort_bar("fo", ["FO Taken", "FO Won"])
+            section_header("Faceoffs — Taken / Won / Win%")
 
             if team_filter == "All":
+                _, sort_col_fo = st.columns([5, 1])
+                with sort_col_fo:
+                    fo_sort = sort_bar("fo", ["FO Taken", "FO Won"])
                 away_fo_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_fo_rows if r["Team"] == away_abbrev],
                     fo_sort,
@@ -1148,6 +1153,9 @@ def render_live():
                     else:
                         st.info("No faceoff data yet.")
             else:
+                _, sort_col_fo = st.columns([5, 1])
+                with sort_col_fo:
+                    fo_sort = sort_bar("fo", ["FO Taken", "FO Won"])
                 fo_rows = apply_sort(
                     [r for r in all_fo_rows if r["Team"] == team_filter],
                     fo_sort,
