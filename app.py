@@ -1083,18 +1083,6 @@ def render_live():
         # -----------------------------------------------------------------------
         with tab_fo:
             warning_box(st.session_state.warning_message, st.session_state.warning_type)
-            col_all, col_away, col_home = st.columns(3)
-            with col_all:
-                if st.button("All Players", use_container_width=True, key="fo_all"):
-                    st.session_state.team_filter = "All"
-            with col_away:
-                if st.button(f"{away_abbrev} (Away)", use_container_width=True, key="fo_away"):
-                    st.session_state.team_filter = away_abbrev
-            with col_home:
-                if st.button(f"{home_abbrev} (Home)", use_container_width=True, key="fo_home"):
-                    st.session_state.team_filter = home_abbrev
-
-            st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
 
             # Build all faceoff rows
             all_fo_rows = []
@@ -1108,12 +1096,22 @@ def render_live():
                     "Win %": win_pct,
                 })
 
-            section_header("Faceoffs — Taken / Won / Win%")
+            col_all, col_away, col_home, _, sort_col_fo = st.columns([2, 1, 1, 1, 2])
+            with col_all:
+                if st.button("All Players", use_container_width=True, key="fo_all"):
+                    st.session_state.team_filter = "All"
+            with col_away:
+                if st.button(away_abbrev, use_container_width=True, key="fo_away"):
+                    st.session_state.team_filter = away_abbrev
+            with col_home:
+                if st.button(home_abbrev, use_container_width=True, key="fo_home"):
+                    st.session_state.team_filter = home_abbrev
+            with sort_col_fo:
+                fo_sort = sort_bar("fo", ["FO Taken", "FO Won"])
+
+            st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
 
             if team_filter == "All":
-                _, sort_col_fo = st.columns([5, 1])
-                with sort_col_fo:
-                    fo_sort = sort_bar("fo", ["FO Taken", "FO Won"])
                 away_fo_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_fo_rows if r["Team"] == away_abbrev],
                     fo_sort,
@@ -1148,9 +1146,6 @@ def render_live():
                     else:
                         st.info("No faceoff data yet.")
             else:
-                _, sort_col_fo = st.columns([5, 1])
-                with sort_col_fo:
-                    fo_sort = sort_bar("fo", ["FO Taken", "FO Won"])
                 fo_rows = apply_sort(
                     [r for r in all_fo_rows if r["Team"] == team_filter],
                     fo_sort,
