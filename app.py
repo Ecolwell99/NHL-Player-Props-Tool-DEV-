@@ -681,17 +681,17 @@ def team_side_header(abbrev: str, label: str):
 _STAT_COL_MAP = {"G": "goals", "A": "assists", "PTS": "points", "SOG": "sog", "BS": "blocked", "SV": "saves", "FO Taken": "fo_taken", "FO Won": "fo_won"}
 
 
-def sort_bar(table_id: str, columns: list[str], name_col: str = "Player", label: str | None = None):
+def sort_bar(table_id: str, columns: list[str], name_col: str = "Player"):
     """Renders a compact sort dropdown. Returns the current sort column."""
     all_cols = [name_col] + columns
     current = st.session_state.get(f"sort_{table_id}", name_col)
     idx = all_cols.index(current) if current in all_cols else 0
     chosen = st.selectbox(
-        label or "Sort by",
+        "Sort by",
         options=all_cols,
         index=idx,
         key=f"sort_{table_id}_select",
-        label_visibility="visible" if label else "collapsed",
+        label_visibility="collapsed",
     )
     st.session_state[f"sort_{table_id}"] = chosen
     return chosen
@@ -970,9 +970,11 @@ def render_live():
                 })
 
             if team_filter == "All":
-                _, ctr, _ = st.columns([1, 2, 1])
-                with ctr:
-                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"], label="Skaters")
+                _, lbl_col, dd_col, _ = st.columns([2, 1, 1, 2])
+                with lbl_col:
+                    st.markdown("<div style='text-align:right; padding-top:8px; font-size:14px; font-weight:600; opacity:0.75;'>Skaters</div>", unsafe_allow_html=True)
+                with dd_col:
+                    skater_sort = sort_bar("skaters", ["G", "A", "PTS", "SOG", "BS"])
                 away_skater_rows = apply_sort(
                     [{k: v for k, v in r.items() if k != "Team"} for r in all_skater_rows if r["Team"] == away_abbrev],
                     skater_sort,
