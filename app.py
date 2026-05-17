@@ -771,14 +771,14 @@ def section_header(text: str):
 def team_summary_card(team: str, stats: dict):
     color = TEAM_COLORS.get(team, "#555555")
     text = pill_text_color(color)
-    pill = f'<span style="background-color:{color}; color:{text}; padding:3px 12px; border-radius:12px; font-weight:700; font-size:13px; margin-right:14px;">{team}</span>'
+    pill = f'<span style="background-color:{color}; color:{text}; padding:4px 16px; border-radius:14px; font-weight:700; font-size:16px; margin-right:16px;">{team}</span>'
     stat_parts = "".join(
-        f'<span style="margin-right:20px; font-size:18px; font-weight:700;">'
-        f'<span style="opacity:0.55; font-size:13px; font-weight:500;">{label}:</span> {val}</span>'
+        f'<span style="margin-right:22px; font-size:22px; font-weight:700;">'
+        f'<span style="opacity:0.55; font-size:14px; font-weight:500;">{label}:</span> {val}</span>'
         for label, val in stats.items()
     )
     st.markdown(
-        f'<div style="padding:12px 16px; margin-bottom:10px; border-radius:8px; '
+        f'<div style="padding:14px 18px; margin-bottom:10px; border-radius:8px; '
         f'background-color:var(--secondary-background-color); display:flex; align-items:center; flex-wrap:wrap;">'
         f'{pill}{stat_parts}</div>',
         unsafe_allow_html=True,
@@ -886,15 +886,6 @@ def render_live():
         game_state = str(game_data.get("gameState", "")).upper()
         is_live = game_state in {"LIVE", "CRIT"}
 
-        away_color = TEAM_COLORS.get(away_abbrev, "#555555")
-        home_color = TEAM_COLORS.get(home_abbrev, "#555555")
-        st.markdown(
-            f"""<style>
-            button[kind="secondary"]:has(p:contains("{away_abbrev}")) p {{ color: {away_color} !important; font-weight: 700 !important; }}
-            button[kind="secondary"]:has(p:contains("{home_abbrev}")) p {{ color: {home_color} !important; font-weight: 700 !important; }}
-            </style>""",
-            unsafe_allow_html=True,
-        )
 
         alerts = []
         deltas = []
