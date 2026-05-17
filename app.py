@@ -1106,7 +1106,7 @@ def render_live():
                     "Win %": win_pct,
                 })
 
-            col_all, col_away, col_home, _, sort_col_fo = st.columns([2, 1, 1, 1, 2])
+            col_all, col_away, col_home, _, period_col_fo, sort_col_fo = st.columns([2, 1, 1, 1, 1, 2])
             with col_all:
                 if st.button("All Players", use_container_width=True, key="fo_all"):
                     st.session_state.team_filter = "All"
@@ -1116,6 +1116,11 @@ def render_live():
             with col_home:
                 if st.button(home_abbrev, use_container_width=True, key="fo_home"):
                     st.session_state.team_filter = home_abbrev
+            with period_col_fo:
+                period_options_fo = ["All"] + [f"P{p}" if p <= 3 else "OT" for p in played_periods]
+                cur_label_fo = "All" if st.session_state.period_filter is None else (f"P{st.session_state.period_filter}" if st.session_state.period_filter <= 3 else "OT")
+                chosen_period_fo = st.selectbox("Period", options=period_options_fo, index=period_options_fo.index(cur_label_fo), key="period_select_fo", label_visibility="collapsed")
+                st.session_state.period_filter = None if chosen_period_fo == "All" else played_periods[period_options_fo.index(chosen_period_fo) - 1]
             with sort_col_fo:
                 fo_sort = sort_bar("fo", ["FO Taken", "FO Won"])
 
