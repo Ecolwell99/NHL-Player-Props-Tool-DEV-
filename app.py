@@ -986,7 +986,6 @@ def render_live():
                 )
                 col_l, col_r = st.columns(2)
                 with col_l:
-                    team_side_header(away_abbrev, "Away")
                     if away_skater_rows:
                         team_summary_card(away_abbrev, {
                             "G": sum(r["G"] for r in away_skater_rows),
@@ -999,7 +998,6 @@ def render_live():
                     else:
                         st.info("No skater stats yet.")
                 with col_r:
-                    team_side_header(home_abbrev, "Home")
                     if home_skater_rows:
                         team_summary_card(home_abbrev, {
                             "G": sum(r["G"] for r in home_skater_rows),
@@ -1128,7 +1126,6 @@ def render_live():
                 )
                 col_l, col_r = st.columns(2)
                 with col_l:
-                    team_side_header(away_abbrev, "Away")
                     if away_fo_rows:
                         away_taken = sum(r["FO Taken"] for r in away_fo_rows)
                         away_won = sum(r["FO Won"] for r in away_fo_rows)
@@ -1141,7 +1138,6 @@ def render_live():
                     else:
                         st.info("No faceoff data yet.")
                 with col_r:
-                    team_side_header(home_abbrev, "Home")
                     if home_fo_rows:
                         home_taken = sum(r["FO Taken"] for r in home_fo_rows)
                         home_won = sum(r["FO Won"] for r in home_fo_rows)
