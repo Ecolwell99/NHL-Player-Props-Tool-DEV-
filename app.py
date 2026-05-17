@@ -778,8 +778,7 @@ def team_summary_card(team: str, stats: dict):
         for label, val in stats.items()
     )
     st.markdown(
-        f'<div style="padding:14px 18px; margin-bottom:10px; border-radius:8px; '
-        f'background-color:var(--secondary-background-color);">'
+        f'<div style="padding:14px 0; margin-bottom:10px;">'
         f'{pill}{stat_parts}</div>',
         unsafe_allow_html=True,
     )
