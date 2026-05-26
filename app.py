@@ -1184,13 +1184,36 @@ def render_live():
         with tab_corrections:
             corr_log = st.session_state.correction_log
 
-            col_clear, _ = st.columns([1, 4])
+            col_clear, col_download, _ = st.columns([1, 1, 3])
             with col_clear:
                 if corr_log and st.button("Clear Corrections", key="clear_corrections"):
                     st.session_state.correction_log = []
                     st.session_state.correction_summary = {}
                     _clear_log(st.session_state.selected_game_id, "corrections")
                     st.rerun()
+            with col_download:
+                if corr_log:
+                    import io, csv as _csv
+                    buf = io.StringIO()
+                    buf.write("﻿")  # UTF-8 BOM for Excel
+                    writer = _csv.DictWriter(buf, fieldnames=["Time", "Period", "Alert", "Impacts", "Type"])
+                    writer.writeheader()
+                    for entry in corr_log:
+                        impacts = entry.get("Impacts") or []
+                        writer.writerow({
+                            "Time": entry.get("Time", ""),
+                            "Period": entry.get("Period", ""),
+                            "Alert": entry.get("Alert", ""),
+                            "Impacts": " | ".join(impacts),
+                            "Type": entry.get("Type", ""),
+                        })
+                    st.download_button(
+                        "Download CSV",
+                        data=buf.getvalue(),
+                        file_name=f"nhl_stat_corrections_{st.session_state.selected_game_id}.csv",
+                        mime="text/csv",
+                        key="download_corrections",
+                    )
 
             if corr_log:
                 for entry in reversed(corr_log):
